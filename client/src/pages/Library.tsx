@@ -162,7 +162,11 @@ export function LibraryPage() {
                       <span className="book-tile-title">{e.book.title}</span>
                       <span className="book-tile-meta">
                         {e.rating ? <StarDisplay value={e.rating} /> : e.status === "reading" ? `${pct(e)}% read` : STATUS_LABEL[e.status]}
-                        {e.owned && <span className="owned-mark"> · Owned</span>}
+                        {e.activeLoan ? (
+                          <span className="owned-mark lent-mark"> · Lent to {e.activeLoan.borrowerName.split(" ")[0]}</span>
+                        ) : (
+                          e.owned && <span className="owned-mark"> · Owned</span>
+                        )}
                       </span>
                     </button>
                   </li>

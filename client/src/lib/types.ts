@@ -37,6 +37,7 @@ export type Entry = {
   startedAt: string | null;
   finishedAt: string | null;
   shelfIds: string[];
+  activeLoan: { id: string; borrowerName: string; dueDate: string | null } | null;
   book: Book;
 };
 
@@ -66,4 +67,47 @@ export const STATUS_LABEL: Record<ReadingStatus, string> = {
   reading: "Reading",
   finished: "Finished",
   dnf: "Didn't finish",
+};
+
+export type PublicUser = { id: string; name: string; handle: string; avatarUrl: string | null; bio: string | null };
+
+export type Relationship = { isSelf: boolean; following: boolean; followedBy: boolean; friends: boolean };
+
+export type ProfileEntry = Pick<Entry, "id" | "status" | "owned" | "progress" | "totalPages" | "rating" | "review" | "finishedAt" | "book">;
+
+export type Profile = {
+  user: PublicUser & Partial<Pick<Me, "email" | "libraryVisibility" | "isDemo">>;
+  libraryVisibility: Me["libraryVisibility"];
+  relationship: Relationship;
+  counts: { followers: number; following: number; books: number; finished: number };
+  visible: boolean;
+  shelf: {
+    reading: ProfileEntry[];
+    recentlyFinished: ProfileEntry[];
+    library: ProfileEntry[];
+    goal: { target: number; period: GoalPeriod; finishedThisYear: number } | null;
+  } | null;
+};
+
+export type Loan = {
+  id: string;
+  book: Book;
+  lender: PublicUser;
+  borrower: PublicUser | null;
+  borrowerName: string;
+  borrowerEmail: string | null;
+  loanedAt: string;
+  dueDate: string | null;
+  returnedAt: string | null;
+  notes: string | null;
+  nudgeCount: number;
+  lastNudgeAt: string | null;
+};
+
+export type Notification = {
+  id: string;
+  type: "new_follower" | "loan_created" | "loan_returned" | "nudge";
+  payload: { from?: PublicUser; by?: PublicUser; title?: string; dueDate?: string | null };
+  read: boolean;
+  createdAt: string;
 };

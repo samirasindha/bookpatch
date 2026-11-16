@@ -11,6 +11,9 @@ A social library app: scan the books on your shelf, track what you're reading, l
 - **Your library.** Reading status, page progress, ratings, reviews, owned copies, and custom shelves.
 - **Reading goals.** Per week, month, or year, with a pace indicator and monthly breakdown based on real finish dates.
 - **Goodreads import.** Brings over ratings, reviews, read dates, owned copies, and shelves. Re-importing never duplicates.
+- **Friends and profiles.** Follow people; following each other makes you friends. Each reader chooses who can see their library: anyone, friends, or just them.
+- **Lending with checkout cards.** Lend to a friend on the app, or to anyone by name. Cards show who has the book, since when, and a stamped due date. Nudge once a day (in the app for members, by email for everyone else), and either side can mark a book returned.
+- **Notifications** for new followers, books lent to you, nudges, and returns.
 - **Light and dark themes**, a phone layout with a bottom tab bar, and a one-click demo that gives each visitor their own seeded library.
 
 ## Tech stack

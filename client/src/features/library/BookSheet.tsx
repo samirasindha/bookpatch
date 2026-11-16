@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Sheet } from "../../components/Sheet";
 import { BookCover } from "../../components/BookCover";
 import { StarInput } from "../../components/Stars";
+import { LendSection } from "../lending/LendForm";
 import { useToast } from "../../components/Toasts";
 import { useRemoveEntry, useShelves, useUpdateEntry } from "../../lib/hooks";
 import { STATUS_LABEL, type Entry, type ReadingStatus } from "../../lib/types";
@@ -148,6 +149,8 @@ function BookForm({ entry, onDone }: { entry: Entry; onDone: () => void }) {
           </div>
         </div>
       )}
+
+      <LendSection entry={{ ...entry, owned }} onLent={onDone} />
 
       <div className="spread" style={{ alignItems: "center" }}>
         {confirmRemove ? (

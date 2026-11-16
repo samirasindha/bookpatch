@@ -7,13 +7,14 @@ import { api } from "../lib/api";
 import { parseGoodreadsExport } from "../lib/goodreads";
 import { useGoals, useSaveGoal, useShelfMutations, useShelves } from "../lib/hooks";
 import { useTheme, type ThemePref } from "../lib/theme";
-import type { GoalPeriod } from "../lib/types";
+import type { GoalPeriod, Me } from "../lib/types";
 
 export function SettingsPage() {
   const { user, signOut } = useAuth();
   return (
     <div className="settings">
       <h1 className="page-title">Settings</h1>
+      <ProfileSettings />
       <Appearance />
       <GoalSettings />
       <ShelfSettings />
@@ -248,6 +249,88 @@ function ImportExport() {
           <Icon name="download" size={16} /> Export
         </a>
       </div>
+    </section>
+  );
+}
+
+function ProfileSettings() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const toast = useToast();
+  const [name, setName] = useState(user?.name ?? "");
+  const [handle, setHandle] = useState(user?.handle ?? "");
+  const [bio, setBio] = useState(user?.bio ?? "");
+  const [visibility, setVisibility] = useState<Me["libraryVisibility"]>(user?.libraryVisibility ?? "friends");
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSaving(true);
+    try {
+      const res = await api<{ user: Me }>("/users/me", {
+        method: "PATCH",
+        body: { name: name.trim(), handle: handle.trim().toLowerCase(), bio: bio.trim() || null, libraryVisibility: visibility },
+      });
+      qc.setQueryData(["me"], res.user);
+      qc.invalidateQueries({ queryKey: ["profile"] });
+      toast("Profile saved");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const options: { value: Me["libraryVisibility"]; label: string; hint: string }[] = [
+    { value: "public", label: "Anyone", hint: "Anyone signed in can see your shelf" },
+    { value: "friends", label: "Friends", hint: "Only people you follow who follow you back" },
+    { value: "private", label: "Just me", hint: "Your shelf stays private" },
+  ];
+
+  return (
+    <section className="card stack" id="profile" aria-labelledby="profile-h">
+      <h2 id="profile-h" className="section-title">
+        Profile
+      </h2>
+      <form className="stack" onSubmit={save}>
+        <div className="row" style={{ alignItems: "flex-start" }}>
+          <label className="field" style={{ flex: "1 1 200px" }}>
+            <span className="label">Name</span>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} required />
+          </label>
+          <label className="field" style={{ flex: "1 1 200px" }}>
+            <span className="label">Handle</span>
+            <input className="input" value={handle} onChange={(e) => setHandle(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))} maxLength={20} required />
+          </label>
+        </div>
+        <label className="field">
+          <span className="label">Bio</span>
+          <input className="input" value={bio} onChange={(e) => setBio(e.target.value)} maxLength={200} placeholder="What do you love to read?" />
+        </label>
+        <div className="field">
+          <span className="label" id="vis-label">
+            Who can see your library
+          </span>
+          <div className="segmented" role="radiogroup" aria-labelledby="vis-label">
+            {options.map((o) => (
+              <button key={o.value} type="button" role="radio" aria-checked={visibility === o.value} onClick={() => setVisibility(o.value)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+          <span className="muted small">{options.find((o) => o.value === visibility)?.hint}</span>
+        </div>
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="btn btn-dark" type="submit" disabled={saving} style={{ alignSelf: "flex-start" }}>
+          {saving ? "Saving…" : "Save profile"}
+        </button>
+      </form>
     </section>
   );
 }

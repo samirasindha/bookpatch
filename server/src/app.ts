@@ -17,6 +17,9 @@ import { libraryRouter } from "./routes/library.js";
 import { shelvesRouter } from "./routes/shelves.js";
 import { goalsRouter } from "./routes/goals.js";
 import { importExportRouter } from "./routes/importExport.js";
+import { usersRouter } from "./routes/users.js";
+import { loansRouter } from "./routes/loans.js";
+import { notificationsRouter } from "./routes/notifications.js";
 
 export function createApp() {
   const app = express();
@@ -55,6 +58,9 @@ export function createApp() {
   app.use("/api/library", importExportRouter, libraryRouter);
   app.use("/api/shelves", shelvesRouter);
   app.use("/api/goals", goalsRouter);
+  app.use("/api/users", usersRouter);
+  app.use("/api/loans", loansRouter);
+  app.use("/api/notifications", notificationsRouter);
 
   app.use("/api", notFoundHandler);
 

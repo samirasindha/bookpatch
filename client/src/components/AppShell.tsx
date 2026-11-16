@@ -4,6 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 import { Logo } from "./Logo";
 import { Icon, type IconName } from "./Icon";
 import { Avatar } from "./Avatar";
+import { NotificationsButton } from "./NotificationsButton";
 import { ScanSheet } from "../features/scan/ScanSheet";
 import { useHandheldScanner } from "../features/scan/useHandheldScanner";
 
@@ -48,7 +49,8 @@ export function AppShell() {
             <Icon name="scan" size={18} />
             Scan
           </button>
-          <NavLink to="/settings" className="icon-btn" aria-label="Settings">
+          <NotificationsButton />
+          <NavLink to="/settings" className="icon-btn hide-mobile" aria-label="Settings">
             <Icon name="settings" />
           </NavLink>
           <button className="icon-btn hide-mobile" onClick={() => void signOut()} aria-label="Sign out">
@@ -73,6 +75,12 @@ export function AppShell() {
             {n.label}
           </NavLink>
         ))}
+        {user && (
+          <NavLink to={`/u/${user.handle}`} className="tab-link">
+            <Icon name="user" size={22} />
+            Me
+          </NavLink>
+        )}
       </nav>
 
       <ScanSheet

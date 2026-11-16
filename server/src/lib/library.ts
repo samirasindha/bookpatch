@@ -1,6 +1,6 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import { db } from "../db/client.js";
-import { shelfBooks, shelves, userBooks } from "../db/schema.js";
+import { loans, shelfBooks, shelves, userBooks } from "../db/schema.js";
 import { badRequest, notFound } from "./errors.js";
 
 export type ReadingStatus = (typeof userBooks.$inferSelect)["status"];
@@ -9,10 +9,18 @@ export type ReadingStatus = (typeof userBooks.$inferSelect)["status"];
 export async function getLibrary(userId: string, ids?: string[]) {
   const rows = await db.query.userBooks.findMany({
     where: ids ? and(eq(userBooks.userId, userId), inArray(userBooks.id, ids)) : eq(userBooks.userId, userId),
-    with: { book: true, shelfBooks: { columns: { shelfId: true } } },
+    with: {
+      book: true,
+      shelfBooks: { columns: { shelfId: true } },
+      loans: { where: isNull(loans.returnedAt), columns: { id: true, borrowerName: true, dueDate: true } },
+    },
     orderBy: [desc(userBooks.addedAt)],
   });
-  return rows.map(({ shelfBooks: sb, ...entry }) => ({ ...entry, shelfIds: sb.map((s) => s.shelfId) }));
+  return rows.map(({ shelfBooks: sb, loans: open, ...entry }) => ({
+    ...entry,
+    shelfIds: sb.map((s) => s.shelfId),
+    activeLoan: open[0] ?? null,
+  }));
 }
 
 export async function getEntry(userId: string, id: string) {

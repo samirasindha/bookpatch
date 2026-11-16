@@ -438,6 +438,7 @@ a {
 
 /* ---------- Book cover ---------- */
 .cover {
+  align-self: flex-start; /* keep the 2:3 book shape inside flex rows */
   position: relative;
   container-type: inline-size; /* lets the fallback title scale with the cover's width */
   aspect-ratio: 2 / 3;
@@ -1236,5 +1237,255 @@ dialog.sheet[open] {
   }
   .signin-art {
     padding-bottom: 2.5rem;
+  }
+}
+
+/* ---------- Lending: checkout cards ---------- */
+.checkout-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
+  gap: 1.25rem;
+}
+.checkout {
+  position: relative;
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.checkout .cover {
+  width: 84px;
+}
+.checkout.is-overdue {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+.checkout-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.checkout-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.45rem;
+  line-height: 1.05;
+}
+.checkout-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 0.35rem 1.5rem;
+  margin: 0.85rem 0 0.25rem;
+}
+.checkout-grid dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.checkout-grid dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+@media (max-width: 520px) {
+  .checkout-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+/* The due date looks rubber-stamped, a nod to old library cards */
+.stamp {
+  display: inline-block;
+  transform: rotate(-4deg);
+  border: 2px solid var(--text-2);
+  color: var(--text-2);
+  border-radius: 4px;
+  padding: 0 0.4rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+.stamp-late {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.checkout-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-2);
+}
+.checkout-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+.checkout-actions .spacer {
+  flex: 1;
+}
+.lend-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.1rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.lend-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+.lent-mark {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+/* ---------- Profiles ---------- */
+.profile-head {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.profile-counts {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.profile-counts strong {
+  color: var(--text);
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.shelf-grid-sm {
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 1.25rem 0.9rem;
+}
+.shelf-grid-sm .book-tile-title {
+  font-size: 0.95rem;
+}
+.review-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.review-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.review-item .cover {
+  width: 60px;
+}
+.review-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  margin-top: 0.2rem;
+}
+.people-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.person {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.person-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  min-width: 0;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 8px;
+}
+.person-link:hover strong {
+  text-decoration: underline;
+}
+
+/* ---------- Notifications ---------- */
+.badge-host {
+  position: relative;
+}
+.badge {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--bg);
+}
+.notif-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.notif {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.85rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 8px;
+}
+a.notif:hover {
+  background: var(--surface-2);
+}
+.notif .dot {
+  margin-left: auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+@media (max-width: 760px) {
+  .tabbar {
+    grid-template-columns: repeat(5, 1fr);
   }
 }

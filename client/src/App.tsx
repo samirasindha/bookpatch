@@ -6,6 +6,8 @@ import { SignIn } from "./pages/SignIn";
 import { LibraryPage } from "./pages/Library";
 import { DiscoverPage } from "./pages/Discover";
 import { SettingsPage } from "./pages/Settings";
+import { LendingPage } from "./pages/Lending";
+import { ProfilePage } from "./pages/Profile";
 
 /** Placeholder for sections that arrive in later stages. */
 function Soon({ title, icon, note }: { title: string; icon: IconName; note: string }) {
@@ -46,9 +48,9 @@ export default function App() {
         <Route path="library" element={<LibraryPage />} />
         <Route path="discover" element={<DiscoverPage />} />
         <Route path="settings" element={<SettingsPage />} />
-        <Route path="lending" element={<Soon title="Lending" icon="lend" note="Checkout cards and nudges are coming in the next stage." />} />
+        <Route path="lending" element={<LendingPage />} />
         <Route path="clubs" element={<Soon title="Book clubs" icon="clubs" note="Book clubs are coming soon." />} />
-        <Route path="u/:handle" element={<Soon title="Profile" icon="user" note="Profiles and friends are coming in the next stage." />} />
+        <Route path="u/:handle" element={<ProfilePage />} />
         <Route path="*" element={<Navigate to="/library" replace />} />
       </Route>
     </Routes>
