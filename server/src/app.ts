@@ -20,6 +20,7 @@ import { importExportRouter } from "./routes/importExport.js";
 import { usersRouter } from "./routes/users.js";
 import { loansRouter } from "./routes/loans.js";
 import { notificationsRouter } from "./routes/notifications.js";
+import { clubsRouter } from "./routes/clubs.js";
 
 export function createApp() {
   const app = express();
@@ -61,6 +62,7 @@ export function createApp() {
   app.use("/api/users", usersRouter);
   app.use("/api/loans", loansRouter);
   app.use("/api/notifications", notificationsRouter);
+  app.use("/api/clubs", clubsRouter);
 
   app.use("/api", notFoundHandler);
 

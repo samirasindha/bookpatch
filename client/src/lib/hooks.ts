@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
-import type { Book, Entry, Goals, GoalPeriod, LibraryStats, Loan, Notification, Profile, PublicUser, ReadingStatus, Relationship, Shelf } from "./types";
+import type { Book, ClubDetail, ClubSummary, Entry, Goals, GoalPeriod, LibraryStats, Loan, Notification, Profile, PublicUser, ReadingStatus, Relationship, Shelf } from "./types";
 
 /* ---------- Queries ---------- */
 export const useLibrary = () =>
@@ -176,4 +176,46 @@ export function useMarkAllRead() {
     mutationFn: () => api("/notifications/read-all", { method: "POST" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["notifications"] }),
   });
+}
+
+/* ---------- Book clubs ---------- */
+export const useClubs = () =>
+  useQuery({ queryKey: ["clubs"], queryFn: () => api<{ mine: ClubSummary[]; discover: ClubSummary[] }>("/clubs") });
+
+export const useClub = (id: string) => useQuery({ queryKey: ["club", id], queryFn: () => api<ClubDetail>(`/clubs/${id}`), retry: false });
+
+export function useClubMutations(id?: string) {
+  const qc = useQueryClient();
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["clubs"] });
+    if (id) qc.invalidateQueries({ queryKey: ["club", id] });
+  };
+  return {
+    create: useMutation({
+      mutationFn: (v: { name: string; description?: string; isPrivate: boolean }) => api<{ club: { id: string } }>("/clubs", { body: v }),
+      onSuccess: refresh,
+    }),
+    join: useMutation({
+      mutationFn: (v: { code?: string; clubId?: string }) => api<{ clubId: string }>("/clubs/join", { body: v }),
+      onSuccess: refresh,
+    }),
+    update: useMutation({
+      mutationFn: (v: { name?: string; description?: string | null; isPrivate?: boolean; currentBook?: Book | null }) =>
+        api(`/clubs/${id}`, { method: "PATCH", body: v }),
+      onSuccess: refresh,
+    }),
+    post: useMutation({
+      mutationFn: (v: { body: string; parentId?: string; spoilerUpToPage?: number | null }) => api(`/clubs/${id}/posts`, { body: v }),
+      onSuccess: refresh,
+    }),
+    removePost: useMutation({
+      mutationFn: (postId: string) => api(`/clubs/${id}/posts/${postId}`, { method: "DELETE" }),
+      onSuccess: refresh,
+    }),
+    leave: useMutation({
+      mutationFn: () => api<{ ok: boolean; deleted?: boolean }>(`/clubs/${id}/members/me`, { method: "DELETE" }),
+      onSuccess: refresh,
+    }),
+    remove: useMutation({ mutationFn: () => api(`/clubs/${id}`, { method: "DELETE" }), onSuccess: refresh }),
+  };
 }

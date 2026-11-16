@@ -1,7 +1,7 @@
 import { and, eq, like, lt } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { db } from "./client.js";
-import { follows, loans, notifications, readingGoals, shelfBooks, shelves, userBooks, users, type User } from "./schema.js";
+import { clubMembers, clubPosts, clubs, follows, loans, notifications, readingGoals, shelfBooks, shelves, userBooks, users, type User } from "./schema.js";
 import { saveBook } from "../lib/catalog.js";
 import { toIsbn13 } from "../lib/isbn.js";
 
@@ -195,6 +195,42 @@ async function seedDemoSocial(visitor: User) {
     loanedAt: daysAgo(6),
     dueDate: dateIn(24),
   });
+
+  // A book club, hosted by the visitor, reading Middlemarch with Maya and Noor
+  const middlemarch = entry("Middlemarch").bookId;
+  for (const [u, page] of [[maya, 560], [noor, 140]] as const) {
+    await db
+      .insert(userBooks)
+      .values({ userId: u.id, bookId: middlemarch, status: "reading", owned: true, progress: page, totalPages: 880, startedAt: daysAgo(20) })
+      .onConflictDoNothing();
+  }
+  const [club] = await db
+    .insert(clubs)
+    .values({
+      name: "Classics Night",
+      description: "One big classic a month, read slowly, talked about loudly. December: Middlemarch.",
+      ownerId: visitor.id,
+      currentBookId: middlemarch,
+      isPrivate: true,
+      inviteCode: `demo${visitor.handle.slice(-6)}`,
+      createdAt: daysAgo(21),
+    })
+    .returning();
+  await db.insert(clubMembers).values([
+    { clubId: club.id, userId: visitor.id, role: "owner", joinedAt: daysAgo(21) },
+    { clubId: club.id, userId: maya.id, role: "moderator", joinedAt: daysAgo(20) },
+    { clubId: club.id, userId: noor.id, role: "member", joinedAt: daysAgo(19) },
+  ]);
+  const [welcome] = await db
+    .insert(clubPosts)
+    .values({ clubId: club.id, authorId: maya.id, bookId: middlemarch, createdAt: daysAgo(19), body: "Welcome to Classics Night! Post as you go, and if you mention something from later in the book, tag it with the page so nobody gets spoiled." })
+    .returning();
+  await db.insert(clubPosts).values([
+    { clubId: club.id, authorId: noor.id, bookId: middlemarch, parentId: welcome.id, createdAt: daysAgo(18), body: "Count me in. I'm slow, but I'm committed." },
+    { clubId: club.id, authorId: noor.id, bookId: middlemarch, createdAt: daysAgo(9), body: "Dorothea agreeing to marry Casaubon this early made me want to shout at the page. Who else?" },
+    { clubId: club.id, authorId: maya.id, bookId: middlemarch, createdAt: daysAgo(2), spoilerUpToPage: 520, body: "Okay, the Bulstrode reveal. I did NOT see that coming, and now every scene with him reads completely differently." },
+    { clubId: club.id, authorId: maya.id, bookId: middlemarch, createdAt: daysAgo(1), body: "Shall we meet up when everyone hits page 400? I'll bring tea." },
+  ]);
 
   const who = (u: User) => ({ id: u.id, name: u.name, handle: u.handle, avatarUrl: null, bio: u.bio });
   await db.insert(notifications).values([

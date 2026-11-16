@@ -111,3 +111,34 @@ export type Notification = {
   read: boolean;
   createdAt: string;
 };
+
+export type ClubSummary = {
+  id: string;
+  name: string;
+  description: string | null;
+  isPrivate: boolean;
+  currentBook: Book | null;
+  memberCount: number;
+  myRole: "owner" | "moderator" | "member" | null;
+  lastActivityAt: string;
+};
+
+export type ClubPost = {
+  id: string;
+  parentId: string | null;
+  body: string;
+  createdAt: string;
+  author: PublicUser;
+  spoilerUpToPage: number | null;
+  hiddenAsSpoiler: boolean;
+  canDelete: boolean;
+};
+
+export type ClubDetail = {
+  club: { id: string; name: string; description: string | null; isPrivate: boolean; inviteCode: string | null; ownerId: string };
+  myRole: "owner" | "moderator" | "member";
+  currentBook: Book | null;
+  myPage: number;
+  members: (PublicUser & { role: string; page: number | null; totalPages: number | null })[];
+  posts: ClubPost[];
+};

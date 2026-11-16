@@ -13,6 +13,7 @@ A social library app: scan the books on your shelf, track what you're reading, l
 - **Goodreads import.** Brings over ratings, reviews, read dates, owned copies, and shelves. Re-importing never duplicates.
 - **Friends and profiles.** Follow people; following each other makes you friends. Each reader chooses who can see their library: anyone, friends, or just them.
 - **Lending with checkout cards.** Lend to a friend on the app, or to anyone by name. Cards show who has the book, since when, and a stamped due date. Nudge once a day (in the app for members, by email for everyone else), and either side can mark a book returned.
+- **Book clubs.** Invite-only clubs (shareable invite link) or open ones anyone can join. The host picks the book, and a shared track shows where every member is in it. Threaded discussion with **spoiler protection**: tag a post with a page number and it stays blurred for anyone who hasn't read that far.
 - **Notifications** for new followers, books lent to you, nudges, and returns.
 - **Light and dark themes**, a phone layout with a bottom tab bar, and a one-click demo that gives each visitor their own seeded library.
 

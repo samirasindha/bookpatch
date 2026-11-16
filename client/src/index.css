@@ -1489,3 +1489,233 @@ a.notif:hover {
     grid-template-columns: repeat(5, 1fr);
   }
 }
+
+/* ---------- Book clubs ---------- */
+.club-grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 1.25rem;
+}
+.club-card {
+  display: flex;
+  gap: 1.1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.club-card:hover {
+  border-color: var(--text-3);
+  transform: translateY(-2px);
+}
+.club-card .cover {
+  width: 72px;
+}
+.club-card-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+.club-cover-empty {
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+  box-shadow: none;
+  border: 1.5px dashed var(--line);
+  background: transparent;
+}
+.clubs-lower {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  align-items: start;
+}
+.club-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.back-link {
+  text-decoration: none;
+}
+.back-link::before {
+  content: "\2190  ";
+}
+.club-grid-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .club-grid-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.current-book .book-hero .cover {
+  width: 110px;
+}
+/* Everyone's place in the book, on one shared track */
+.together {
+  margin-top: 1.75rem;
+  padding: 1.5rem 1.25rem 1.1rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+.together-track {
+  position: relative;
+  height: 6px;
+  margin: 1.4rem 15px 2rem;
+  border-radius: 999px;
+  background: var(--track);
+}
+.together-start,
+.together-end {
+  position: absolute;
+  top: 14px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+.together-start {
+  left: -15px;
+}
+.together-end {
+  right: -15px;
+}
+.together-pin {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--surface-2);
+  transition: left 0.6s ease;
+}
+.together-legend {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.88rem;
+}
+.together-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.thread-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.thread {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--line);
+}
+.replies {
+  list-style: none;
+  padding: 0 0 0 3rem;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.post {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+.post-body {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+.post-meta a {
+  color: var(--text);
+  text-decoration: none;
+}
+.post-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* Delete stays out of the way: always visible on your own posts,
+   and on others' posts (for hosts) only on hover or keyboard focus */
+.post-delete {
+  margin-left: auto;
+  background: none;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--text-3);
+  cursor: pointer;
+  opacity: 0;
+}
+.post-delete.is-mine,
+.post:hover .post-delete,
+.post:focus-within .post-delete,
+.post-delete:focus-visible {
+  opacity: 1;
+}
+.post-delete:hover {
+  color: var(--accent-text);
+}
+@media (hover: none) {
+  .post-delete {
+    opacity: 1;
+  }
+}
+.spoiler {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.spoiler-text {
+  filter: blur(6px);
+  user-select: none;
+  padding: 0.25rem 0;
+}
+.spoiler-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  background: color-mix(in srgb, var(--surface-2) 75%, transparent);
+  text-align: center;
+}
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.composer-reply {
+  margin: 0.75rem 0 0 3rem;
+}
+.reply-btn {
+  margin: 0.4rem 0 0 2.4rem;
+  min-height: 32px;
+  font-size: 0.85rem;
+}
