@@ -2,16 +2,20 @@ import { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../auth/AuthContext";
 import { GoogleButton } from "../auth/GoogleButton";
-import { Logo } from "../components/Logo";
+import { BookCover } from "../components/BookCover";
 import { Icon } from "../components/Icon";
+import { APP_NAME } from "../config";
 import { api } from "../lib/api";
 import type { AuthConfig } from "../lib/types";
 
-const FEATURES = [
-  { icon: "scan", title: "Scan your shelves", text: "Point your camera at a barcode and the book is in your library." },
-  { icon: "lend", title: "Lend with a checkout card", text: "Know who has your books, and send a friendly nudge when it's time." },
-  { icon: "clubs", title: "Read together", text: "Follow friends, see their shelves, and start a book club." },
-] as const;
+// Typographic covers only (no real cover art) for the hero
+const HERO_BOOKS = [
+  { title: "Middlemarch", author: "George Eliot", coverUrl: null },
+  { title: "Jane Eyre", author: "Charlotte Brontë", coverUrl: null },
+  { title: "The Odyssey", author: "Homer", coverUrl: null },
+  { title: "Persuasion", author: "Jane Austen", coverUrl: null },
+  { title: "Dracula", author: "Bram Stoker", coverUrl: null },
+];
 
 export function SignIn() {
   const { signInWithGoogle, signInAsDemo } = useAuth();
@@ -27,62 +31,60 @@ export function SignIn() {
     [signInWithGoogle],
   );
 
-  const handleDemo = async () => {
+  async function demo() {
     setBusy(true);
     setError(null);
     try {
       await signInAsDemo();
     } catch (e) {
       setError((e as Error).message);
-    } finally {
       setBusy(false);
     }
-  };
+  }
 
   return (
     <main className="signin" id="main">
-      <section className="signin-hero">
-        <Logo size={34} />
-        <h1 className="signin-title">
-          Every book you own, <em>read, and lend</em>, in one place.
-        </h1>
-        <ul className="signin-features">
-          {FEATURES.map((f) => (
-            <li key={f.title}>
-              <span className="signin-feature-icon">
-                <Icon name={f.icon} size={22} />
-              </span>
-              <div>
-                <strong>{f.title}</strong>
-                <p>{f.text}</p>
-              </div>
-            </li>
+      <section className="signin-art" aria-hidden="true">
+        <span className="wordmark">{APP_NAME}</span>
+        <p className="signin-headline">
+          Every book you own, <em>read, and lend.</em>
+        </p>
+        <div className="signin-covers">
+          {HERO_BOOKS.map((b) => (
+            <BookCover key={b.title} book={b} size={14} />
           ))}
-        </ul>
+        </div>
       </section>
 
-      <section className="signin-card" aria-labelledby="signin-heading">
-        <h2 id="signin-heading">Open your library</h2>
-        <p className="muted">Sign in to sync your books across devices and connect with friends.</p>
+      <section className="signin-panel" aria-labelledby="signin-h">
+        <h1 id="signin-h" className="section-title" style={{ fontSize: "2.2rem" }}>
+          Open your library
+        </h1>
+        <ul className="signin-points">
+          <li>
+            <Icon name="scan" size={18} /> Scan your shelves into a library in minutes
+          </li>
+          <li>
+            <Icon name="lend" size={18} /> Lend books and remember who has them
+          </li>
+          <li>
+            <Icon name="clubs" size={18} /> Read along with friends and book clubs
+          </li>
+        </ul>
 
-        <div className="signin-actions">
-          {config.data?.googleClientId && (
-            <GoogleButton clientId={config.data.googleClientId} onCredential={handleGoogle} />
-          )}
-          {config.data?.demoLogin && (
-            <>
-              {config.data.googleClientId && <div className="or-divider"><span>or</span></div>}
-              <button className="btn btn-ghost btn-wide" onClick={handleDemo} disabled={busy}>
-                <Icon name="book" size={18} />
-                {busy ? "Opening demo…" : "Explore the demo library"}
-              </button>
-            </>
-          )}
-          {config.isSuccess && !config.data.googleClientId && !config.data.demoLogin && (
-            <p className="muted small">Sign-in isn't configured yet. Add GOOGLE_CLIENT_ID to the server's .env file.</p>
-          )}
-        </div>
-
+        {config.data?.googleClientId && <GoogleButton clientId={config.data.googleClientId} onCredential={handleGoogle} />}
+        {config.data?.demoLogin && (
+          <>
+            {config.data.googleClientId && <div className="or-divider">or</div>}
+            <button className="btn btn-outline btn-wide" onClick={demo} disabled={busy}>
+              {busy ? "Setting up your demo library…" : "Explore the demo"}
+            </button>
+            <p className="muted small">The demo comes with a library of classics to try things out. No account needed.</p>
+          </>
+        )}
+        {config.isSuccess && !config.data.googleClientId && !config.data.demoLogin && (
+          <p className="muted small">Sign-in isn't set up yet. Add GOOGLE_CLIENT_ID to the server's .env file.</p>
+        )}
         {error && (
           <p className="form-error" role="alert">
             {error}

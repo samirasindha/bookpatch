@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { Logo } from "./Logo";
+import { APP_NAME } from "../config";
 import { Icon, type IconName } from "./Icon";
 import { Avatar } from "./Avatar";
+import { ScanSheet } from "../features/scan/ScanSheet";
+import { useHandheldScanner } from "../features/scan/useHandheldScanner";
 
 const NAV: { to: string; label: string; icon: IconName }[] = [
   { to: "/library", label: "Library", icon: "library" },
@@ -13,37 +16,49 @@ const NAV: { to: string; label: string; icon: IconName }[] = [
 
 export function AppShell() {
   const { user, signOut } = useAuth();
+  const [scanOpen, setScanOpen] = useState(false);
+  const [firstScan, setFirstScan] = useState<string | null>(null);
+
+  // A handheld USB/Bluetooth scanner "types" an ISBN and presses Enter.
+  // Catch that anywhere in the app and open rapid shelving with the book already in the queue.
+  useHandheldScanner((isbn) => {
+    setFirstScan(isbn);
+    setScanOpen(true);
+  }, !scanOpen);
 
   return (
     <>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <header className="topbar">
-        <NavLink to="/library" className="topbar-brand" aria-label="STACKS home">
-          <Logo size={26} />
+      <header className="header">
+        <NavLink to="/library" className="wordmark">
+          {APP_NAME}
         </NavLink>
-
-        <nav className="topbar-nav" aria-label="Main">
-          {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} className="nav-link">
-              <Icon name={item.icon} size={18} />
-              <span>{item.label}</span>
+        <nav className="header-nav" aria-label="Main">
+          {NAV.map((n) => (
+            <NavLink key={n.to} to={n.to} className="nav-link">
+              {n.label}
             </NavLink>
           ))}
         </nav>
-
-        <div className="topbar-actions">
-          {user?.isDemo && <span className="demo-pill">Demo</span>}
+        <div className="header-actions">
+          {user?.isDemo && <span className="demo-pill hide-mobile">Demo</span>}
+          <button className="btn btn-accent btn-sm" onClick={() => setScanOpen(true)}>
+            <Icon name="scan" size={18} />
+            Scan
+          </button>
           <NavLink to="/settings" className="icon-btn" aria-label="Settings">
             <Icon name="settings" />
           </NavLink>
-          <NavLink to={`/u/${user?.handle}`} className="avatar-link" aria-label="Your profile">
-            {user && <Avatar user={user} size={32} />}
-          </NavLink>
-          <button className="icon-btn" onClick={() => void signOut()} aria-label="Sign out">
+          <button className="icon-btn hide-mobile" onClick={() => void signOut()} aria-label="Sign out">
             <Icon name="logout" />
           </button>
+          {user && (
+            <NavLink to={`/u/${user.handle}`} className="avatar-btn hide-mobile" aria-label="Your profile">
+              <Avatar user={user} size={32} />
+            </NavLink>
+          )}
         </div>
       </header>
 
@@ -51,19 +66,23 @@ export function AppShell() {
         <Outlet />
       </main>
 
-      {/* Phone-sized screens get a thumb-friendly tab bar instead of the top nav */}
       <nav className="tabbar" aria-label="Main">
-        {NAV.map((item) => (
-          <NavLink key={item.to} to={item.to} className="tab-link">
-            <Icon name={item.icon} size={22} />
-            <span>{item.label}</span>
+        {NAV.map((n) => (
+          <NavLink key={n.to} to={n.to} className="tab-link">
+            <Icon name={n.icon} size={22} />
+            {n.label}
           </NavLink>
         ))}
-        <NavLink to={`/u/${user?.handle}`} className="tab-link">
-          <Icon name="user" size={22} />
-          <span>Me</span>
-        </NavLink>
       </nav>
+
+      <ScanSheet
+        open={scanOpen}
+        initialIsbn={firstScan}
+        onClose={() => {
+          setScanOpen(false);
+          setFirstScan(null);
+        }}
+      />
     </>
   );
 }

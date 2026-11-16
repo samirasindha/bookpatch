@@ -54,18 +54,6 @@ export async function upsertGoogleUser(profile: {
   return created;
 }
 
-export const DEMO_EMAIL = "demo@stacks.app";
-
-export async function getOrCreateDemoUser(): Promise<User> {
-  const existing = await db.query.users.findFirst({ where: eq(users.email, DEMO_EMAIL) });
-  if (existing) return existing;
-  const [created] = await db
-    .insert(users)
-    .values({ email: DEMO_EMAIL, name: "Demo Reader", handle: await uniqueHandle("demo"), isDemo: true, bio: "Exploring STACKS" })
-    .returning();
-  return created;
-}
-
 /** The fields that are safe to send to other users. */
 export function publicUser(u: User) {
   return { id: u.id, name: u.name, handle: u.handle, avatarUrl: u.avatarUrl, bio: u.bio };

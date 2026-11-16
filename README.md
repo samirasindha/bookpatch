@@ -1,8 +1,17 @@
-# STACKS
+# [name]
 
 A social library app: scan the books on your shelf, track what you're reading, lend books to friends with a digital checkout card, and talk about them in book clubs.
 
 > Work in progress. The full README with screenshots, architecture, and design decisions comes with the final stage.
+
+## Features so far
+
+- **Scan your shelves.** Works with a handheld USB/Bluetooth barcode scanner (detected anywhere in the app by typing speed) or a phone camera. Rapid shelving mode queues book after book, then adds them all at once.
+- **Find any book.** Searches Google Books first and falls back to Open Library, with optional ISBNdb for hard-to-find editions. Every lookup is saved, so a book is only fetched once.
+- **Your library.** Reading status, page progress, ratings, reviews, owned copies, and custom shelves.
+- **Reading goals.** Per week, month, or year, with a pace indicator and monthly breakdown based on real finish dates.
+- **Goodreads import.** Brings over ratings, reviews, read dates, owned copies, and shelves. Re-importing never duplicates.
+- **Light and dark themes**, a phone layout with a bottom tab bar, and a one-click demo that gives each visitor their own seeded library.
 
 ## Tech stack
 

@@ -12,6 +12,11 @@ import { db } from "./db/client.js";
 import { loadUser } from "./lib/auth.js";
 import { errorHandler, notFoundHandler } from "./lib/errors.js";
 import { authRouter } from "./routes/auth.js";
+import { booksRouter } from "./routes/books.js";
+import { libraryRouter } from "./routes/library.js";
+import { shelvesRouter } from "./routes/shelves.js";
+import { goalsRouter } from "./routes/goals.js";
+import { importExportRouter } from "./routes/importExport.js";
 
 export function createApp() {
   const app = express();
@@ -46,6 +51,10 @@ export function createApp() {
   });
 
   app.use("/api/auth", authRouter);
+  app.use("/api/books", booksRouter);
+  app.use("/api/library", importExportRouter, libraryRouter);
+  app.use("/api/shelves", shelvesRouter);
+  app.use("/api/goals", goalsRouter);
 
   app.use("/api", notFoundHandler);
 

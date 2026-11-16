@@ -4,7 +4,8 @@ import { z } from "zod";
 import { env } from "../env.js";
 import { clearSessionCookie, setSessionCookie } from "../lib/auth.js";
 import { HttpError } from "../lib/errors.js";
-import { getOrCreateDemoUser, selfUser, upsertGoogleUser } from "../lib/users.js";
+import { selfUser, upsertGoogleUser } from "../lib/users.js";
+import { createDemoUser } from "../db/demo.js";
 
 const googleClient = new OAuth2Client();
 
@@ -47,7 +48,7 @@ authRouter.post("/google", async (req, res) => {
 /** One-click demo account so recruiters can try the live app without signing in. */
 authRouter.post("/demo", async (_req, res) => {
   if (!env.ALLOW_DEMO_LOGIN) throw new HttpError(403, "Demo login is disabled");
-  const user = await getOrCreateDemoUser();
+  const user = await createDemoUser();
   setSessionCookie(res, user.id);
   res.json({ user: selfUser(user) });
 });

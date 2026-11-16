@@ -8,6 +8,8 @@ const EnvSchema = z.object({
   SESSION_SECRET: z.string().min(16, "SESSION_SECRET must be at least 16 characters"),
   GOOGLE_CLIENT_ID: z.string().optional().default(""),
   RESEND_API_KEY: z.string().optional().default(""),
+  GOOGLE_BOOKS_API_KEY: z.string().optional().default(""),
+  ISBNDB_API_KEY: z.string().optional().default(""),
   EMAIL_FROM: z.string().default("Stacks <onboarding@resend.dev>"),
   CLIENT_ORIGIN: z.string().default("http://localhost:5173"),
   ALLOW_DEMO_LOGIN: z
