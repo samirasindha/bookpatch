@@ -59,7 +59,7 @@ describe("book catalog", () => {
     expect(spy).toHaveBeenCalledTimes(1);
 
     const second = await lookupIsbn("978-0141439549");
-    expect(second?.source).toBe("stacks");
+    expect(second?.source).toBe("cache");
     expect(spy).toHaveBeenCalledTimes(1);
   });
 

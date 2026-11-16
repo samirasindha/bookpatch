@@ -491,12 +491,31 @@ a {
   border-bottom: 1px solid var(--line);
 }
 .wordmark {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.75rem;
   color: var(--text);
   text-decoration: none;
-  line-height: 1;
+  display: inline-flex;
+  border-radius: 6px;
+}
+.logo {
+  display: inline-flex;
+  color: var(--text);
+}
+.logo span,
+.logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.logo-compact {
+  width: 150px;
+}
+.logo-full {
+  width: min(100%, 460px);
+}
+@media (max-width: 760px) {
+  .logo-compact {
+    width: 128px;
+  }
 }
 .header-nav {
   display: flex;
@@ -1141,10 +1160,13 @@ dialog.sheet[open] {
   gap: 2.5rem;
   overflow: hidden;
 }
+.signin-logo {
+  margin: -1rem 0 0 -0.75rem;
+}
 .signin-headline {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
   line-height: 0.98;
   letter-spacing: -0.015em;
   max-width: 11ch;

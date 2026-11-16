@@ -6,7 +6,7 @@ import { db } from "../db/client.js";
 import { users, type User } from "../db/schema.js";
 import { HttpError } from "./errors.js";
 
-export const SESSION_COOKIE = "stacks_session";
+export const SESSION_COOKIE = "bookpatch_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 declare global {

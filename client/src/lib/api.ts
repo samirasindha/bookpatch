@@ -6,7 +6,7 @@ export class ApiError extends Error {
   }
 }
 
-/** Small typed wrapper around fetch for the STACKS API. Sends the session cookie automatically. */
+/** Small typed wrapper around fetch for the Bookpatch API. Sends the session cookie automatically. */
 export async function api<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
   const res = await fetch(`/api${path}`, {
     method: options.method ?? (options.body ? "POST" : "GET"),

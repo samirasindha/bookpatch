@@ -136,7 +136,7 @@ export const loans = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userBookId: uuid("user_book_id").notNull().references(() => userBooks.id, { onDelete: "cascade" }),
     lenderId: uuid("lender_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    // Either a STACKS user, or just a name + email for friends who aren't on the app yet
+    // Either a Bookpatch user, or just a name + email for friends who aren't on the app yet
     borrowerId: uuid("borrower_id").references(() => users.id, { onDelete: "set null" }),
     borrowerName: text("borrower_name").notNull(),
     borrowerEmail: text("borrower_email"),

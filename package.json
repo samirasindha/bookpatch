@@ -1,8 +1,8 @@
 {
-  "name": "stacks",
+  "name": "bookpatch",
   "private": true,
   "version": "0.1.0",
-  "description": "STACKS: a social library app for tracking, lending, and discussing the books you own and read",
+  "description": "Bookpatch: a social library app for tracking, lending, and discussing the books you own and read",
   "workspaces": [
     "server",
     "client"

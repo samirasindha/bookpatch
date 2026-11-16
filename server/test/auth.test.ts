@@ -42,7 +42,7 @@ describe("auth", () => {
   });
 
   it("rejects a forged session cookie", async () => {
-    const res = await request(app).get("/api/auth/me").set("Cookie", "stacks_session=not-a-real-token");
+    const res = await request(app).get("/api/auth/me").set("Cookie", "bookpatch_session=not-a-real-token");
     expect(res.body.user).toBeNull();
   });
 });

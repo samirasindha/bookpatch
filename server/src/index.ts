@@ -5,5 +5,5 @@ import { runMigrations } from "./db/migrate.js";
 await runMigrations();
 
 createApp().listen(env.PORT, () => {
-  console.log(`STACKS API listening on http://localhost:${env.PORT}`);
+  console.log(`Bookpatch API listening on http://localhost:${env.PORT}`);
 });

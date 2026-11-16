@@ -14,7 +14,7 @@ export type CatalogBook = {
   publishedYear: number | null;
   isbn: string | null;
   pageCount: number | null;
-  source: "google" | "openlibrary" | "isbndb" | "stacks";
+  source: "google" | "openlibrary" | "isbndb" | "cache";
 };
 
 type Provider = {
@@ -83,7 +83,7 @@ const openLibrary: Provider = {
   async search(q) {
     const data = await getJson(
       `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=20&fields=key,title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median`,
-      { "User-Agent": "StacksLibraryApp/1.0" },
+      { "User-Agent": "BookpatchApp/1.0" },
     );
     return (data?.docs ?? []).map(
       (d: any): CatalogBook => {
@@ -104,7 +104,7 @@ const openLibrary: Provider = {
   },
   async byIsbn(isbn) {
     const data = await getJson(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`, {
-      "User-Agent": "StacksLibraryApp/1.0",
+      "User-Agent": "BookpatchApp/1.0",
     });
     const b = data?.[`ISBN:${isbn}`];
     if (!b) return null;
@@ -178,7 +178,7 @@ export async function lookupIsbn(rawIsbn: string): Promise<CatalogBook | null> {
   if (!isbn) return null;
 
   const cached = await db.query.books.findFirst({ where: eq(books.isbn, isbn) });
-  if (cached) return { ...cached, source: "stacks" };
+  if (cached) return { ...cached, source: "cache" };
 
   for (const p of providers.filter((p) => p.enabled())) {
     try {

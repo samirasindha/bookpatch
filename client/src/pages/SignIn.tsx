@@ -4,7 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 import { GoogleButton } from "../auth/GoogleButton";
 import { BookCover } from "../components/BookCover";
 import { Icon } from "../components/Icon";
-import { APP_NAME } from "../config";
+import { Logo } from "../components/Logo";
 import { api } from "../lib/api";
 import type { AuthConfig } from "../lib/types";
 
@@ -44,12 +44,12 @@ export function SignIn() {
 
   return (
     <main className="signin" id="main">
-      <section className="signin-art" aria-hidden="true">
-        <span className="wordmark">{APP_NAME}</span>
-        <p className="signin-headline">
+      <section className="signin-art">
+        <Logo variant="full" className="signin-logo" />
+        <p className="signin-headline" aria-hidden="true">
           Every book you own, <em>read, and lend.</em>
         </p>
-        <div className="signin-covers">
+        <div className="signin-covers" aria-hidden="true">
           {HERO_BOOKS.map((b) => (
             <BookCover key={b.title} book={b} size={14} />
           ))}

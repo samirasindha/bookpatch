@@ -1,4 +1,4 @@
-# [name]
+# Bookpatch
 
 A social library app: scan the books on your shelf, track what you're reading, lend books to friends with a digital checkout card, and talk about them in book clubs.
 
@@ -59,4 +59,4 @@ Without a Google client ID, the sign-in page offers the demo account only. To en
 | `npm run lint`      | Type-check server and client               |
 | `npm run build`     | Production build of both                   |
 
-Tests use `TEST_DATABASE_URL` (defaults to a local `stacks_test` database). Never point it at a database with real data, because tests wipe it.
+Tests use `TEST_DATABASE_URL` (defaults to a local `bookpatch_test` database). Never point it at a database with real data, because tests wipe it.

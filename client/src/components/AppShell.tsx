@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { APP_NAME } from "../config";
+import { Logo } from "./Logo";
 import { Icon, type IconName } from "./Icon";
 import { Avatar } from "./Avatar";
 import { ScanSheet } from "../features/scan/ScanSheet";
@@ -32,8 +32,8 @@ export function AppShell() {
         Skip to content
       </a>
       <header className="header">
-        <NavLink to="/library" className="wordmark">
-          {APP_NAME}
+        <NavLink to="/library" className="wordmark" aria-label="bookpatch, go to your library">
+          <Logo />
         </NavLink>
         <nav className="header-nav" aria-label="Main">
           {NAV.map((n) => (

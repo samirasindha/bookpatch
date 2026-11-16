@@ -10,7 +10,7 @@ const EnvSchema = z.object({
   RESEND_API_KEY: z.string().optional().default(""),
   GOOGLE_BOOKS_API_KEY: z.string().optional().default(""),
   ISBNDB_API_KEY: z.string().optional().default(""),
-  EMAIL_FROM: z.string().default("Stacks <onboarding@resend.dev>"),
+  EMAIL_FROM: z.string().default("Bookpatch <onboarding@resend.dev>"),
   CLIENT_ORIGIN: z.string().default("http://localhost:5173"),
   ALLOW_DEMO_LOGIN: z
     .string()

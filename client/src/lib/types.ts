@@ -20,7 +20,7 @@ export type Book = {
   publishedYear: number | null;
   isbn: string | null;
   pageCount: number | null;
-  source?: "google" | "openlibrary" | "isbndb" | "stacks";
+  source?: "google" | "openlibrary" | "isbndb" | "cache";
 };
 
 export type ReadingStatus = "want_to_read" | "reading" | "finished" | "dnf";
