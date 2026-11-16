@@ -1,0 +1,53 @@
+# STACKS
+
+A social library app: scan the books on your shelf, track what you're reading, lend books to friends with a digital checkout card, and talk about them in book clubs.
+
+> Work in progress. The full README with screenshots, architecture, and design decisions comes with the final stage.
+
+## Tech stack
+
+| Layer    | Tools                                                                 |
+| -------- | --------------------------------------------------------------------- |
+| Frontend | React 19, TypeScript, Vite, React Router, TanStack Query              |
+| Backend  | Node.js, Express 5, TypeScript, Zod validation                        |
+| Database | PostgreSQL with Drizzle ORM and versioned SQL migrations              |
+| Auth     | Google Identity Services (ID token verified server-side), httpOnly JWT session cookie |
+| Security | Helmet (CSP), CORS allowlist, rate limiting                           |
+| Testing  | Vitest + Supertest against a real Postgres test database              |
+
+## Run it locally
+
+You need **Node.js 20+** and a **PostgreSQL database**. The easiest database option is a free [Neon](https://neon.tech) project, which you'll reuse when deploying. You can also install Postgres locally (Postgres.app on Mac, or the official installer on Windows).
+
+```bash
+# 1. Install everything (client + server)
+npm install
+
+# 2. Configure the server
+cp server/.env.example server/.env
+#    then open server/.env and set DATABASE_URL and SESSION_SECRET
+
+# 3. Start the API and the web app together
+npm run dev
+```
+
+Open http://localhost:5173. The database tables are created automatically when the server starts.
+
+### Google sign-in (optional for local dev)
+
+Without a Google client ID, the sign-in page offers the demo account only. To enable Google:
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com), create a project, then **APIs & Services > Credentials > Create credentials > OAuth client ID > Web application**.
+2. Under **Authorized JavaScript origins**, add `http://localhost:5173`.
+3. Copy the client ID into `GOOGLE_CLIENT_ID` in `server/.env` and restart.
+
+## Scripts
+
+| Command             | What it does                               |
+| ------------------- | ------------------------------------------ |
+| `npm run dev`       | API on :3000 and web app on :5173          |
+| `npm test`          | API test suite (needs a test database)     |
+| `npm run lint`      | Type-check server and client               |
+| `npm run build`     | Production build of both                   |
+
+Tests use `TEST_DATABASE_URL` (defaults to a local `stacks_test` database). Never point it at a database with real data, because tests wipe it.
