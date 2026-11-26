@@ -5,7 +5,7 @@ import { GoogleButton } from "../auth/GoogleButton";
 import { BookCover } from "../components/BookCover";
 import { Icon } from "../components/Icon";
 import { Logo } from "../components/Logo";
-import { api } from "../lib/api";
+import { api, waitForServer } from "../lib/api";
 import type { AuthConfig } from "../lib/types";
 
 // Typographic covers only (no real cover art) for the hero
@@ -21,7 +21,11 @@ export function SignIn() {
   const { signInWithGoogle, signInAsDemo } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const config = useQuery({ queryKey: ["auth-config"], queryFn: () => api<AuthConfig>("/auth/config") });
+  const config = useQuery({
+    queryKey: ["auth-config"],
+    queryFn: () => api<AuthConfig>("/auth/config"),
+    ...waitForServer,
+  });
 
   const handleGoogle = useCallback(
     (credential: string) => {
@@ -81,6 +85,19 @@ export function SignIn() {
             </button>
             <p className="muted small">The demo comes with a library of classics to try things out. No account needed.</p>
           </>
+        )}
+        {config.isPending && (
+          <p className="muted small" role="status">
+            Loading sign-in options…
+          </p>
+        )}
+        {config.isError && (
+          <div className="signin-problem" role="alert">
+            <p className="muted small">Couldn't load sign-in options. Is the server running?</p>
+            <button className="btn btn-outline btn-wide" onClick={() => config.refetch()}>
+              Try again
+            </button>
+          </div>
         )}
         {config.isSuccess && !config.data.googleClientId && !config.data.demoLogin && (
           <p className="muted small">Sign-in isn't set up yet. Add GOOGLE_CLIENT_ID to the server's .env file.</p>

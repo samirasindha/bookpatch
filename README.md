@@ -44,21 +44,21 @@ cp server/.env.example server/.env
 npm run dev
 ```
 
-Open http://localhost:5173. The database tables are created automatically when the server starts.
+Open http://localhost:5174. The database tables are created automatically when the server starts.
 
 ### Google sign-in (optional for local dev)
 
 Without a Google client ID, the sign-in page offers the demo account only. To enable Google:
 
 1. Go to [console.cloud.google.com](https://console.cloud.google.com), create a project, then **APIs & Services > Credentials > Create credentials > OAuth client ID > Web application**.
-2. Under **Authorized JavaScript origins**, add `http://localhost:5173`.
+2. Under **Authorized JavaScript origins**, add `http://localhost:5174`.
 3. Copy the client ID into `GOOGLE_CLIENT_ID` in `server/.env` and restart.
 
 ## Scripts
 
 | Command             | What it does                               |
 | ------------------- | ------------------------------------------ |
-| `npm run dev`       | API on :3000 and web app on :5173          |
+| `npm run dev`       | API on :3001 and web app on :5174          |
 | `npm test`          | API test suite (needs a test database)     |
 | `npm run lint`      | Type-check server and client               |
 | `npm run build`     | Production build of both                   |

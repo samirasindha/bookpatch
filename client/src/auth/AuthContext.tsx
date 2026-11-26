@@ -1,11 +1,16 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../lib/api";
+import { api, isServerDown, waitForServer } from "../lib/api";
 import type { Me } from "../lib/types";
 
 type AuthState = {
   user: Me | null;
   loading: boolean;
+  /** How many times in a row the server couldn't be reached while starting up. */
+  serverWaits: number;
+  /** True when the server never answered, even after waiting. */
+  serverUnreachable: boolean;
+  retry: () => void;
   signInWithGoogle: (credential: string) => Promise<void>;
   signInAsDemo: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -19,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["me"],
     queryFn: () => api<{ user: Me | null }>("/auth/me").then((r) => r.user),
     staleTime: Infinity,
+    ...waitForServer,
   });
 
   const onSignedIn = (user: Me) => {
@@ -45,6 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value: AuthState = {
     user: me.data ?? null,
     loading: me.isLoading,
+    serverWaits: me.failureCount,
+    serverUnreachable: me.isError && isServerDown(me.error),
+    retry: () => void me.refetch(),
     signInWithGoogle: async (c) => void (await google.mutateAsync(c)),
     signInAsDemo: async () => void (await demo.mutateAsync()),
     signOut: async () => void (await logout.mutateAsync()),
